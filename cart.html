@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аптека ДЛВ - Корзина</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">Д</span>
+                    Аптека ДЛВ
+                </a>
+                <nav>
+                    <a href="index.html">Каталог</a>
+                    <a href="compare.html">Сравнение</a>
+                    <a href="orders.html">Заказы</a>
+                    <a href="cart.html" class="cart-link active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-counter">0</span>
+                    </a>
+                    <a href="admin.html" title="Админ-панель">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container cart-page">
+            <div class="page-header">
+                <h1><i class="fas fa-shopping-cart"></i> Корзина</h1>
+                <p class="page-subtitle" id="cart-items-count"></p>
+            </div>
+            
+            <div id="cart-empty" class="empty-state" style="display: none;">
+                <i class="fas fa-shopping-basket" style="font-size: 4rem; color: var(--border-color); margin-bottom: 1rem;"></i>
+                <h3>Ваша корзина пуста</h3>
+                <p>Добавьте товары из каталога, чтобы оформить заказ</p>
+                <a href="index.html" class="btn btn-primary" style="margin-top: 1rem;">
+                    <i class="fas fa-store"></i> Перейти в каталог
+                </a>
+            </div>
+
+            <div id="cart-content" style="display: none;">
+                <div class="cart-layout">
+                    <div class="cart-main">
+                        <div class="cart-header-bar">
+                            <h2><i class="fas fa-list"></i> Товары</h2>
+                            <button class="btn btn-sm btn-danger-outline" id="clear-cart-btn">
+                                <i class="fas fa-trash"></i> Очистить
+                            </button>
+                        </div>
+                        
+                        <div id="cart-items" class="cart-items-list"></div>
+                        
+                        <div class="cart-continue">
+                            <a href="index.html" class="btn btn-outline">
+                                <i class="fas fa-arrow-left"></i> Продолжить покупки
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="cart-sidebar">
+                        <div class="cart-summary-card">
+                            <h3><i class="fas fa-receipt"></i> Итого</h3>
+                            
+                            <div class="promo-section">
+                                <label><i class="fas fa-tag"></i> Промокод</label>
+                                <div class="promo-input-group">
+                                    <input type="text" id="promo-input" placeholder="Введите код">
+                                    <button class="btn btn-sm btn-primary" id="apply-promo">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                                <div id="promo-applied" class="promo-applied" style="display: none;">
+                                    <span class="promo-badge">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span id="promo-text"></span>
+                                    </span>
+                                    <button class="btn-remove-promo" id="remove-promo">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-rows">
+                                <div class="summary-row">
+                                    <span>Товары (<span id="items-count">0</span> шт.)</span>
+                                    <span id="subtotal">0 ₽</span>
+                                </div>
+                                <div id="discount-row" class="summary-row discount" style="display: none;">
+                                    <span>Скидка</span>
+                                    <span id="discount-amount">-0 ₽</span>
+                                </div>
+                                <div class="summary-divider"></div>
+                                <div class="summary-row total">
+                                    <span>К оплате</span>
+                                    <span id="cart-total">0 ₽</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="order-form-card">
+                            <h3><i class="fas fa-clipboard-check"></i> Оформление</h3>
+                            
+                            <form id="order-form">
+                                <div class="form-group">
+                                    <label for="customer-name">
+                                        <i class="fas fa-user"></i> ФИО *
+                                    </label>
+                                    <input type="text" id="customer-name" placeholder="Иванов Иван Иванович" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="customer-phone">
+                                        <i class="fas fa-phone"></i> Телефон *
+                                    </label>
+                                    <input type="tel" id="customer-phone" placeholder="+7 (___) ___-__-__" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label><i class="fas fa-truck"></i> Способ получения *</label>
+                                    <div class="delivery-options">
+                                        <label class="delivery-option active">
+                                            <input type="radio" name="delivery" value="delivery" checked>
+                                            <i class="fas fa-truck"></i>
+                                            <span>Доставка</span>
+                                        </label>
+                                        <label class="delivery-option">
+                                            <input type="radio" name="delivery" value="pickup">
+                                            <i class="fas fa-store"></i>
+                                            <span>Самовывоз</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group" id="address-group">
+                                    <label for="customer-address">
+                                        <i class="fas fa-map-marker-alt"></i> Адрес *
+                                    </label>
+                                    <input type="text" id="customer-address" placeholder="г. Москва, ул. Ленина, д. 1">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="customer-comment">
+                                        <i class="fas fa-comment"></i> Комментарий
+                                    </label>
+                                    <textarea id="customer-comment" rows="2" placeholder="Дополнительные пожелания..."></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-lg btn-block" id="place-order">
+                                    <i class="fas fa-check-circle"></i> Оформить заказ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="confirm-clear-modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i> Очистить корзину?</h2>
+                <button class="modal-close" onclick="closeClearModal()">&times;</button>
+            </div>
+            <p style="margin-bottom: 1.5rem;">Вы уверены, что хотите удалить все товары из корзины?</p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="closeClearModal()">Отмена</button>
+                <button class="btn btn-danger" onclick="confirmClearCart()">
+                    <i class="fas fa-trash"></i> Очистить
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="order-success-modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);">
+                <h2 style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-check-circle" style="color: var(--success-color);"></i>
+                    Заказ оформлен!
+                </h2>
+                <button class="modal-close" onclick="closeSuccessModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 2rem;">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success-color);"></i>
+                </div>
+                <h3 style="margin: 1rem 0 0.5rem;">Спасибо за заказ!</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Ваш заказ успешно оформлен и передан в обработку</p>
+                
+                <div class="order-success-info">
+                    <div class="success-info-row">
+                        <span class="success-label">Номер заказа:</span>
+                        <span class="success-value" id="success-order-id">ORD-XXX</span>
+                    </div>
+                    <div class="success-info-row">
+                        <span class="success-label">Сумма:</span>
+                        <span class="success-value" id="success-order-total">0 ₽</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: center;">
+                    <button class="btn btn-outline" onclick="closeSuccessModal()">
+                        <i class="fas fa-clipboard-list"></i> Мои заказы
+                    </button>
+                    <a href="index.html" class="btn btn-primary">
+                        <i class="fas fa-store"></i> В каталог
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>О нас</h4>
+                    <p>Аптека ДЛВ - качественные лекарства и профессиональная консультация.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>Телефон: 8 (800) 123-45-67</p>
+                    <p>Адрес: ул. Аптечная, 1</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Информация</h4>
+                    <a href="#">Доставка</a>
+                    <a href="#">Возврат</a>
+                    <a href="#">Политика конфиденциальности</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ООО "ДЛВ". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

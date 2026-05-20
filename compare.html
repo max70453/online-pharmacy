@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аптека ДЛВ - Сравнение товаров</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">Д</span>
+                    Аптека ДЛВ
+                </a>
+                <nav>
+                    <a href="index.html">Каталог</a>
+                    <a href="compare.html" class="active">Сравнение</a>
+                    <a href="orders.html">Заказы</a>
+                    <a href="cart.html" class="cart-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-counter">0</span>
+                    </a>
+                    <a href="admin.html" title="Админ-панель">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container compare-page">
+            <h1><i class="fas fa-balance-scale"></i> Сравнение товаров</h1>
+
+            <div id="compare-empty" class="empty-state" style="display: none;">
+                <i class="fas fa-balance-scale" style="font-size: 4rem; color: var(--border-color); margin-bottom: 1rem;"></i>
+                <h3>Нет товаров для сравнения</h3>
+                <p>Добавьте товары из каталога, нажав кнопку "К сравнению"</p>
+                <a href="index.html" class="btn btn-primary" style="margin-top: 1rem;">Перейти в каталог</a>
+            </div>
+
+            <div id="compare-content" style="display: none;">
+                <div class="compare-table-wrapper">
+                    <table class="compare-table" id="compare-table">
+                        <tbody id="compare-tbody"></tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <button class="btn btn-danger" id="clear-compare-btn">
+                        <i class="fas fa-trash-alt"></i> Очистить сравнение
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>О нас</h4>
+                    <p>Аптека ДЛВ - качественные лекарства и профессиональная консультация.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>Телефон: 8 (800) 123-45-67</p>
+                    <p>Адрес: ул. Аптечная, 1</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Информация</h4>
+                    <a href="#">Доставка</a>
+                    <a href="#">Возврат</a>
+                    <a href="#">Политика конфиденциальности</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ООО "ДЛВ". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/compare.js"></script>
+</body>
+</html>

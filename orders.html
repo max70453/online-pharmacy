@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аптека ДЛВ - История заказов</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">Д</span>
+                    Аптека ДЛВ
+                </a>
+                <nav>
+                    <a href="index.html">Каталог</a>
+                    <a href="compare.html">Сравнение</a>
+                    <a href="orders.html" class="active">Заказы</a>
+                    <a href="cart.html" class="cart-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-counter">0</span>
+                    </a>
+                    <a href="admin.html" title="Админ-панель">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-clipboard-list"></i> История заказов</h1>
+                <p class="page-subtitle">Просмотр и отслеживание ваших заказов</p>
+            </div>
+
+            <div id="phone-auth-section" class="phone-auth-card">
+                <i class="fas fa-lock" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                <h3>Введите номер телефона</h3>
+                <p>Для просмотра ваших заказов введите номер, указанный при оформлении</p>
+                <div class="phone-input-group">
+                    <input type="tel" id="auth-phone" placeholder="+7 (___) ___-__-__" maxlength="18">
+                    <button class="btn btn-primary" id="auth-submit">
+                        <i class="fas fa-sign-in-alt"></i> Войти
+                    </button>
+                </div>
+            </div>
+
+            <div id="orders-section" style="display: none;">
+                <div class="orders-header-bar">
+                    <div class="current-user">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="current-user-phone"></span>
+                    </div>
+                    <button class="btn btn-sm btn-outline" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </div>
+
+                <div class="orders-filters">
+                    <div class="filter-buttons">
+                        <button class="btn btn-sm filter-btn active" data-status="">
+                            <i class="fas fa-list"></i> Все
+                        </button>
+                        <button class="btn btn-sm filter-btn" data-status="new">
+                            <i class="fas fa-clock"></i> Новые
+                        </button>
+                        <button class="btn btn-sm filter-btn" data-status="processing">
+                            <i class="fas fa-spinner"></i> В обработке
+                        </button>
+                        <button class="btn btn-sm filter-btn" data-status="ready">
+                            <i class="fas fa-check"></i> Готовы
+                        </button>
+                        <button class="btn btn-sm filter-btn" data-status="completed">
+                            <i class="fas fa-check-double"></i> Выданные
+                        </button>
+                    </div>
+                </div>
+
+                <div id="orders-empty" class="empty-state" style="display: none; display: flex;
+                align-items: center;
+                flex-direction: column;
+                margin-top: 1rem;">
+                    <i class="fas fa-box-open" style="color: var(--primary-color);"></i>
+                    <h3>У вас пока нет заказов</h3>
+                    <p>Оформите первый заказ в нашем каталоге</p>
+                    <a href="index.html" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-store"></i> Перейти в каталог
+                    </a>
+                </div>
+
+                <div id="orders-list" class="orders-list"></div>
+                
+                <div id="no-results" class="empty-state" style="display: none;">
+                    <i class="fas fa-search" style="color: var(--text-secondary);"></i>
+                    <h3>Ничего не найдено</h3>
+                    <p>Попробуйте изменить параметры поиска</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="order-detail-modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="modal-order-title">
+                    <i class="fas fa-file-alt" style="color: var(--primary-color);"></i>
+                    Детали заказа
+                </h2>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-order-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>О нас</h4>
+                    <p>Аптека ДЛВ - качественные лекарства и профессиональная консультация.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>Телефон: 8 (800) 123-45-67</p>
+                    <p>Адрес: ул. Аптечная, 1</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Информация</h4>
+                    <a href="#">Доставка</a>
+                    <a href="#">Возврат</a>
+                    <a href="#">Политика конфиденциальности</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ООО "ДЛВ". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>

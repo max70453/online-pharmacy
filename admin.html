@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аптека ДЛВ - Админ-панель</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="libs/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">Д</span>
+                    Аптека ДЛВ
+                </a>
+                <nav>
+                    <a href="index.html">Каталог</a>
+                    <a href="compare.html">Сравнение</a>
+                    <a href="orders.html">Заказы</a>
+                    <a href="cart.html" class="cart-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-counter">0</span>
+                    </a>
+                    <a href="admin.html" class="active" title="Админ-панель">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div id="pin-screen" class="pin-screen">
+                <div class="pin-card">
+                    <div class="pin-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h1>Админ-панель</h1>
+                    <p>Введите PIN-код для входа в систему управления</p>
+                    <div class="pin-input-wrapper">
+                        <input type="password" id="pin-input" placeholder="• • • •" maxlength="4" autocomplete="off">
+                        <button class="btn btn-primary" id="pin-submit">
+                            <i class="fas fa-sign-in-alt"></i> Войти
+                        </button>
+                    </div>
+                    <p id="pin-error" class="pin-error">
+                        <i class="fas fa-exclamation-circle"></i> Неверный PIN-код
+                    </p>
+                    <p class="pin-hint">Подсказка: PIN-код по умолчанию — 1111</p>
+                </div>
+            </div>
+
+            <div id="admin-content" style="display: none;">
+                <div class="admin-header">
+                    <div class="admin-title">
+                        <h1><i class="fas fa-cog"></i> Панель управления</h1>
+                        <p>Управление товарами, заказами и настройками</p>
+                    </div>
+                    <div class="admin-stats-mini">
+                        <div class="stat-mini">
+                            <span class="stat-value" id="stat-goods">0</span>
+                            <span class="stat-label">Товаров</span>
+                        </div>
+                        <div class="stat-mini">
+                            <span class="stat-value" id="stat-orders">0</span>
+                            <span class="stat-label">Заказов</span>
+                        </div>
+                        <div class="stat-mini">
+                            <span class="stat-value" id="stat-reviews">0</span>
+                            <span class="stat-label">Отзывов</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="goods">
+                        <i class="fas fa-box"></i>
+                        <span>Товары</span>
+                    </button>
+                    <button class="admin-tab" data-tab="orders">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Заказы</span>
+                    </button>
+                    <button class="admin-tab" data-tab="promo">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Промокоды</span>
+                    </button>
+                    <button class="admin-tab" data-tab="stats">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Статистика</span>
+                    </button>
+                    <button class="admin-tab" data-tab="backup">
+                        <i class="fas fa-database"></i>
+                        <span>Бэкап</span>
+                    </button>
+                </div>
+
+                <div class="admin-panel active" id="panel-goods">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-box"></i> Управление товарами</h2>
+                        <button class="btn btn-primary" id="add-good-btn">
+                            <i class="fas fa-plus"></i> Добавить товар
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="admin-table" id="goods-table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-hashtag"></i> ID</th>
+                                    <th><i class="fas fa-box"></i> Название</th>
+                                    <th><i class="fas fa-tag"></i> Категория</th>
+                                    <th><i class="fas fa-ruble-sign"></i> Цена</th>
+                                    <th><i class="fas fa-warehouse"></i> Остаток</th>
+                                    <th><i class="fas fa-star"></i> Рейтинг</th>
+                                    <th><i class="fas fa-prescription"></i> Рецепт</th>
+                                    <th><i class="fas fa-cog"></i> Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="goods-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div id="goods-pagination" class="admin-pagination"></div>
+                </div>
+
+                <div class="admin-panel" id="panel-orders">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-shopping-cart"></i> Управление заказами</h2>
+                        <div class="panel-filters">
+                            <select id="admin-order-status-filter" class="admin-select">
+                                <option value="">Все статусы</option>
+                                <option value="new">Новый</option>
+                                <option value="processing">В обработке</option>
+                                <option value="ready">Готов к выдаче</option>
+                                <option value="completed">Выдан</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="admin-table" id="admin-orders-table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-file-alt"></i> Номер</th>
+                                    <th><i class="fas fa-calendar"></i> Дата</th>
+                                    <th><i class="fas fa-user"></i> Клиент</th>
+                                    <th><i class="fas fa-phone"></i> Телефон</th>
+                                    <th><i class="fas fa-ruble-sign"></i> Сумма</th>
+                                    <th><i class="fas fa-info-circle"></i> Статус</th>
+                                    <th><i class="fas fa-comment"></i> Комментарий</th>
+                                    <th><i class="fas fa-cog"></i> Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-orders-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="panel-promo">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-ticket-alt"></i> Управление промокодами</h2>
+                        <button class="btn btn-primary" id="add-promo-btn">
+                            <i class="fas fa-plus"></i> Добавить промокод
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="admin-table" id="promo-table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-ticket-alt"></i> Код</th>
+                                    <th><i class="fas fa-percent"></i> Скидка</th>
+                                    <th><i class="fas fa-toggle-on"></i> Статус</th>
+                                    <th><i class="fas fa-cog"></i> Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="promo-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="panel-stats">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-chart-bar"></i> Статистика продаж</h2>
+                        <div class="stats-period-selector">
+                            <button class="btn btn-sm active" data-period="7">7 дней</button>
+                            <button class="btn btn-sm" data-period="30">30 дней</button>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-card-icon" style="background: #E3F2FD;">
+                                <i class="fas fa-shopping-cart" style="color: #1976D2;"></i>
+                            </div>
+                            <div class="stat-card-content">
+                                <span class="stat-card-value" id="total-orders">0</span>
+                                <span class="stat-card-label">Всего заказов</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-icon" style="background: #E8F5E9;">
+                                <i class="fas fa-ruble-sign" style="color: #388E3C;"></i>
+                            </div>
+                            <div class="stat-card-content">
+                                <span class="stat-card-value" id="total-sales">0 ₽</span>
+                                <span class="stat-card-label">Общая выручка</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-icon" style="background: #FFF3E0;">
+                                <i class="fas fa-box" style="color: #F57C00;"></i>
+                            </div>
+                            <div class="stat-card-content">
+                                <span class="stat-card-value" id="total-goods-sold">0</span>
+                                <span class="stat-card-label">Товаров продано</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-card-icon" style="background: #F3E5F5;">
+                                <i class="fas fa-star" style="color: #7B1FA2;"></i>
+                            </div>
+                            <div class="stat-card-content">
+                                <span class="stat-card-value" id="avg-order">0 ₽</span>
+                                <span class="stat-card-label">Средний чек</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <h3><i class="fas fa-chart-line"></i> Продажи по дням</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="sales-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3><i class="fas fa-chart-pie"></i> Топ-5 товаров</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="top-goods-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="panel-backup">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-database"></i> Резервное копирование</h2>
+                    </div>
+                    <div class="backup-grid">
+                        <div class="backup-card">
+                            <div class="backup-icon">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <h3>Экспорт данных</h3>
+                            <p>Скачать все данные из localStorage в JSON-файл для безопасного хранения</p>
+                            <button class="btn btn-primary" id="export-btn">
+                                <i class="fas fa-download"></i> Скачать резервную копию
+                            </button>
+                        </div>
+                        <div class="backup-card">
+                            <div class="backup-icon" style="background: #FFF3E0;">
+                                <i class="fas fa-upload" style="color: #F57C00;"></i>
+                            </div>
+                            <h3>Импорт данных</h3>
+                            <p>Восстановить данные из ранее созданной резервной копии</p>
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="import-file" accept=".json">
+                            </div>
+                            <button class="btn btn-secondary" id="import-btn">
+                                <i class="fas fa-upload"></i> Восстановить из файла
+                            </button>
+                        </div>
+                        <div class="backup-card danger-zone">
+                            <div class="backup-icon" style="background: #FFEBEE;">
+                                <i class="fas fa-exclamation-triangle" style="color: #D32F2F;"></i>
+                            </div>
+                            <h3>Сброс данных</h3>
+                            <p>Удалить все текущие данные и загрузить демо-данные. Внимание: это действие необратимо!</p>
+                            <button class="btn btn-danger" id="reset-data-btn">
+                                <i class="fas fa-trash"></i> Сбросить все данные
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="good-modal">
+        <div class="modal-content modal-lg good-modal-compact">
+            <div class="modal-header">
+                <h2 id="good-modal-title"><i class="fas fa-plus"></i> Добавить товар</h2>
+                <button class="modal-close" onclick="closeGoodModal()">&times;</button>
+            </div>
+            <form id="good-form" class="good-form-compact">
+                <input type="hidden" id="good-edit-id">
+                <div class="form-grid-compact">
+                    <div class="form-group">
+                        <label for="good-name"><i class="fas fa-box"></i> Название *</label>
+                        <input type="text" id="good-name" required placeholder="Например: Нурофен">
+                    </div>
+                    <div class="form-group">
+                        <label for="good-substance"><i class="fas fa-flask"></i> Вещество</label>
+                        <input type="text" id="good-substance" placeholder="Например: Ибупрофен">
+                    </div>
+                    <div class="form-group">
+                        <label for="good-category"><i class="fas fa-tag"></i> Категория *</label>
+                        <select id="good-category" required>
+                            <option value="Обезболивающие">Обезболивающие</option>
+                            <option value="Антибиотики">Антибиотики</option>
+                            <option value="Пищеварение">Пищеварение</option>
+                            <option value="Витамины">Витамины</option>
+                            <option value="Успокоительные">Успокоительные</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="good-price"><i class="fas fa-ruble-sign"></i> Цена *</label>
+                        <input type="number" id="good-price" min="0" required placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="good-stock"><i class="fas fa-warehouse"></i> Остаток *</label>
+                        <input type="number" id="good-stock" min="0" required placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="good-prescription"><i class="fas fa-prescription"></i> По рецепту</label>
+                        <select id="good-prescription">
+                            <option value="false">Нет</option>
+                            <option value="true">Да</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row-compact">
+                    <div class="form-group">
+                        <label for="good-image"><i class="fas fa-image"></i> URL изображения</label>
+                        <input type="text" id="good-image" placeholder="assets/images/нурофен.png">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="good-description"><i class="fas fa-align-left"></i> Описание</label>
+                    <textarea id="good-description" rows="2" placeholder="Описание товара..."></textarea>
+                </div>
+                <div class="form-actions-compact">
+                    <button type="button" class="btn btn-outline btn-sm" onclick="closeGoodModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-save"></i> Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="promo-modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2 id="promo-modal-title"><i class="fas fa-ticket-alt"></i> Добавить промокод</h2>
+                <button class="modal-close" onclick="closePromoModal()">&times;</button>
+            </div>
+            <form id="promo-form">
+                <input type="hidden" id="promo-edit-code">
+                <div class="form-group">
+                    <label for="promo-code"><i class="fas fa-tag"></i> Код *</label>
+                    <input type="text" id="promo-code" required placeholder="PROMO10" style="text-transform: uppercase;">
+                </div>
+                <div class="form-group">
+                    <label for="promo-discount"><i class="fas fa-percent"></i> Скидка (%) *</label>
+                    <input type="number" id="promo-discount" min="1" max="99" required placeholder="10">
+                </div>
+                <div class="form-group">
+                    <label for="promo-active"><i class="fas fa-toggle-on"></i> Активен</label>
+                    <select id="promo-active">
+                        <option value="true">Да</option>
+                        <option value="false">Нет</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closePromoModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="order-comment-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-comment"></i> Комментарий к заказу</h2>
+                <button class="modal-close" onclick="closeOrderCommentModal()">&times;</button>
+            </div>
+            <form id="order-comment-form">
+                <input type="hidden" id="comment-order-id">
+                <div class="form-group">
+                    <label for="order-comment"><i class="fas fa-edit"></i> Комментарий менеджера</label>
+                    <textarea id="order-comment" rows="4" placeholder="Введите комментарий..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeOrderCommentModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="order-view-modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="order-view-title"><i class="fas fa-file-alt"></i> Детали заказа</h2>
+                <button class="modal-close" onclick="closeOrderViewModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="order-view-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>О нас</h4>
+                    <p>Аптека ДЛВ - качественные лекарства и профессиональная консультация.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>Телефон: 8 (800) 123-45-67</p>
+                    <p>Адрес: ул. Аптечная, 1</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Информация</h4>
+                    <a href="#">Доставка</a>
+                    <a href="#">Возврат</a>
+                    <a href="#">Политика конфиденциальности</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ООО "ДЛВ". Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
